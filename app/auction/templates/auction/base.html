@@ -24,22 +24,8 @@
 
             {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <!-- <a class="nav-link" href="{% url 'logout' %}">Log Out</a> --> 
+                    <a class="nav-link" href="{% url 'logOut' %}">Log Out</a>
                 </li>
-                <li class="nav-item">
-                     <!-- <a class="nav-link" href="{% url 'create' %}">Create Listing</a>  --> 
-                </li>
-
-                <li class="nav-item">
-                    <!-- <a class="nav-link" href="{% url 'watchlistpage' user.username %}">Watch List</a>  -->
-                </li>
-
-                <li class="nav-item">
-                   <!--  <a class="nav-link" href="{% url 'winnings' %}">Your Winnings</a> -->
-                </li>
-
-                
-
             {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logIn' %}">Log In</a>

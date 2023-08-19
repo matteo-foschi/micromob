@@ -45,3 +45,8 @@ def register(request):
     else:
         form = CustomUserCreationForm()
     return render(request, "auction/register.html", {"form": form})
+
+
+def logOut(request):
+    logout(request)
+    return redirect("homePage")
