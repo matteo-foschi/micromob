@@ -11,8 +11,6 @@ from datetime import timedelta
 from django.contrib.auth.decorators import login_required
 import redis
 
-r = redis.Redis(host="127.0.0.1", port=6379, password="", db=0, decode_responses=True)
-
 
 def homePage(request):
     return render(
