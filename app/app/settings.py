@@ -68,6 +68,13 @@ TEMPLATES = [
     },
 ]
 
+CACHES = {
+    "default": {
+        "BACKEND": "redis_cache.RedisCache",
+        "LOCATION": "redis://localhost:6379/0",
+    }
+}
+
 WSGI_APPLICATION = "app.wsgi.application"
 
 
