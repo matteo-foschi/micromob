@@ -1,0 +1,36 @@
+{% extends "auction/base.html" %}
+
+{% block body %}
+    <a class="title">{{list.title}}</a><br>
+        {% if messages %}
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+    <div id="activelist">
+        <div id = "productinfo">
+        {% if list.image_url %}
+            <img src="{{ list.image_url }}" class="list_img">
+        {% else %}
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1024px-No_image_3x4.svg.png" alt="No image Provided" class="list_img">
+        {% endif %}
+
+        <p class="desc">{{ list.description }}</p>
+        <div class = "start_bid"><a><a class="c_price">Listed By: </a> {{ list.user }}</div>
+
+        <form method="get" action = "{% url 'bid' %}">
+            <input name= "bidAmount" placeholder = "Bid Amount" type = "number">
+            <button class="btn btn-outline-primary" type = "submit" name = "listId" value = {{ list.id }}>Bid Item</button>
+        </form>
+ 
+        </div>
+        </div>
+
+
+        </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}

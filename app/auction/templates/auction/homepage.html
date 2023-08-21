@@ -2,4 +2,18 @@
 
 {% block body %}
     <h2>Active Listings</h2>
+    {% for list in list1 %}
+    <div class = "card">
+        <a class="title">{{list.title}}</a>
+        {% if list.image_url %}
+            <img src="{{ list.image_url }}" class="list_img">   
+        {% else %}
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1024px-No_image_3x4.svg.png" alt="No image Provided" class="list_img">
+        {% endif %}
+        <p class="desc">{{ list.description }}</p>
+        <a><a class="c_price">Starting Bid: </a> {{ list.startingBid }} $ </a>
+        <a href="{% url 'listAuction' list.id %}">View Bid</a>
+    </div>
+    {% endfor %}
+    <h2>End Page</h2>
 {% endblock %}
