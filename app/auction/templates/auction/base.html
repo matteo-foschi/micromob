@@ -30,9 +30,18 @@
                   <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'homePage' %}">Home Page</a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'auctionClosed' %}">Closed Auction</a>
+                  </li>
                   {% if user.is_authenticated %}
                   <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'myProfile' %}">My Profile</a>
+                  </li>
+                  <li class="nav-item">
                     <a class="nav-link" href="{% url 'logOut' %}">Log Out</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'create' %}">Create New Auction</a>
                   </li>
                   {% else %}
                   <li class="nav-item">
@@ -42,9 +51,6 @@
                     <a class="nav-link" href="{% url 'register' %}">Register</a>
                   </li>
                   {% endif %}
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'create' %}">Create New Auction</a>
-                  </li>
                 </ul>
               </div>
             </div>

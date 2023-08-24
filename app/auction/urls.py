@@ -10,4 +10,6 @@ urlpatterns = [
     path("create", views.create, name="create"),
     path("auctions/<int:indexId>", views.listIndexAuction, name="listAuction"),
     path("bidlist", views.bidList, name="bid"),
+    path("auctionClosed", views.auctionClosed, name="auctionClosed"),
+    path("myProfile", views.auctionWin, name="myProfile"),
 ]

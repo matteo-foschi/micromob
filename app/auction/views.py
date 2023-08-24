@@ -24,8 +24,13 @@ import os
 
 load_dotenv()
 
+rPassword = os.getenv("redisPassword")
 
-r = redis.Redis(host="127.0.0.1", port=6379, password="", db=0, decode_responses=True)
+r = redis.Redis(
+    host="redis-16708.c11.us-east-1-3.ec2.cloud.redislabs.com",
+    port=16708,
+    password=rPassword,
+)
 
 
 def homePage(request):
@@ -48,7 +53,17 @@ def homePage(request):
             auction.txId = txId
             auction.save()
     return render(
-        request, "auction/homepage.html", {"list1": auctionItem.objects.all()}
+        request,
+        "auction/homepage.html",
+        {"list1": auctionItem.objects.filter(active=True)},
+    )
+
+
+def auctionClosed(request):
+    return render(
+        request,
+        "auction/closeauction.html",
+        {"list1": auctionItem.objects.filter(active=False)},
     )
 
 
@@ -128,20 +143,19 @@ def bidList(request):
                 request,
                 "Your last bid is the best. You are the best bidder in the auction.",
             )
-            return render(request, "auction/listauction.html", {"list": listId})
+            return listIndexAuction(request, listId)
         else:
             placeBid(listId, request.user.username, bidAmount)
             print("Si può inserire la puntata d'asta")
+            messages.success(request, "Offerta correttamente inserita")
+            return listIndexAuction(request, listId)
     else:
         print("Offerta troppo bassa")
         messages.error(
             request,
             "Offerta troppo bassa",
         )
-        return render(request, "auction/listauction.html", {"list": listId})
-
-    indexAuction = auctionItem.objects.get(id=listId, active=True)
-    return render(request, "auction/listauction.html", {"list": indexAuction})
+        return listIndexAuction(request, listId)
 
 
 def placeBid(auctionId, bidder, bidAmount):
@@ -195,3 +209,15 @@ def sendTransaction(message):
     tx = w3.eth.send_raw_transaction(signedTx.rawTransaction)
     txId = w3.to_hex(tx)
     return txId
+
+
+def auctionWin(request):
+    return render(
+        request,
+        "auction/myprofile.html",
+        {
+            "list1": auctionItem.objects.filter(
+                active=False, winner=request.user.username
+            )
+        },
+    )
