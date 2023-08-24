@@ -19,18 +19,9 @@ class auctionItem(models.Model):
     active = models.BooleanField(default=True)
     startDate = models.DateTimeField(default=timezone.now)
     endDate = models.DateTimeField(default=timezone.now)
-    bidWinner = models.IntegerField(default=None, null=True)
+    bidWinner = models.IntegerField(default=None, null=True, blank=True)
     winner = models.CharField(max_length=20, blank=True, null=True)
     txId = models.CharField(max_length=66, default=None, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         super(auctionItem, self).save(*args, **kwargs)
-
-
-class auctionBid(models.Model):
-    auction = models.ForeignKey(auctionItem, on_delete=models.CASCADE, default=1)
-    bidderUser = models.CharField(max_length=100, null=True)
-    bidAmount = models.FloatField()
-
-    def save(self, *args, **kwargs):
-        super(auctionBid, self).save(*args, **kwargs)

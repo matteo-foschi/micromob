@@ -9,21 +9,46 @@ from django.contrib import messages
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.decorators import login_required
+import hashlib
 
 from django.conf import settings
 import json
 
 import redis
 
+from web3 import Web3
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+
 r = redis.Redis(host="127.0.0.1", port=6379, password="", db=0, decode_responses=True)
 
 
 def homePage(request):
-    return render(
-        request,
-        "auction/homepage.html",
-        {"list1": auctionItem.objects.filter(active=True)},
-    )
+    auctions = auctionItem.objects.filter(active=True)
+    for auction in auctions:
+        if auction.endDate >= timezone.now():
+            auction.active = False
+            auction.bidWinner = getHighBid(auction.id)
+            auction.winner = getUserHighBid(auction.id)
+            data = {
+                "ID": auction.id,
+                "Auction tile": auction.title,
+                "Start Auction price": auction.startingBid,
+                "End Auction price": auction.bidWinner,
+                "Winner user": auction.winner,
+            }
+            jsonString = json.dumps(data)
+            hash = hashlib.sha256(jsonString.encode("utf-8")).hexdigest()
+            txId = sendTransaction(hash)
+            auction.txId = txId
+            auction.save()
+        return render(
+            request, "auction/homepage.html", {"list1": auctionItem.objects.all()}
+        )
 
 
 def logIn(request):
@@ -127,14 +152,43 @@ def placeBid(auctionId, bidder, bidAmount):
 def getHighBid(listId):
     keyExists = r.zrange(f"auction:{listId}", 0, -1, withscores=True)
     if len(keyExists) > 0:
-        highest_bid = r.zrevrange(f"auction:{listId}", 0, 0, withscores=True)
-        lastAmount = float(highest_bid[0][1])
+        highestBid = r.zrevrange(f"auction:{listId}", 0, 0, withscores=True)
+        lastAmount = float(highestBid[0][1])
     else:
         lastAmount = 0
     return lastAmount
 
 
 def getUserHighBid(listId):
-    highest_bid = r.zrevrange(f"auction:{listId}", 0, 0, withscores=True)
-    userHighBid = highest_bid[0][0]
+    highestBid = r.zrevrange(f"auction:{listId}", 0, 0, withscores=True)
+    userHighBid = highestBid[0][0]
     return userHighBid
+
+
+def sendTransaction(message):
+    w3 = Web3(
+        Web3.HTTPProvider(
+            "https://goerli.infura.io/v3/ecadd76dd30247b4bf4fd9238723bba2"
+        )
+    )
+    address = "0x3eDb1E13ae5D632a555128E57052B7662106DEa6"
+    privateKey = os.getenv("privateKey")
+    nonce = w3.eth.get_transaction_count(address, "pending")
+    # w3.eth.get_transaction_count(address)
+    gasPrice = w3.eth.gas_price
+    value = w3.to_wei(0, "ether")
+    signedTx = w3.eth.account.sign_transaction(
+        dict(
+            nonce=nonce,
+            gasPrice=gasPrice,
+            gas=100000,
+            to="0x0000000000000000000000000000000000000000",
+            value=value,
+            data=message.encode("utf-8"),
+        ),
+        privateKey,
+    )
+
+    tx = w3.eth.send_raw_transaction(signedTx.rawTransaction)
+    txId = w3.to_hex(tx)
+    return txId
