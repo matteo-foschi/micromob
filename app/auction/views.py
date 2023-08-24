@@ -96,7 +96,7 @@ def create(request):
         if form.is_valid():
             item = form.save(commit=False)
             item.user = request.user.username
-            item.endDate = item.startDate + timedelta(minutes=30)
+            item.endDate = item.startDate + timedelta(minutes=5)
             item.save()
             return redirect("homePage")  # Redirect to a success page
     else:
@@ -145,8 +145,6 @@ def bidList(request):
 
 def placeBid(auctionId, bidder, bidAmount):
     r.zadd(f"auction:{auctionId}", {bidder: bidAmount})
-    all_bids = r.zrange(f"auction:{auctionId}", 0, -1, withscores=True)
-    print(all_bids)
 
 
 def getHighBid(listId):
@@ -155,13 +153,17 @@ def getHighBid(listId):
         highestBid = r.zrevrange(f"auction:{listId}", 0, 0, withscores=True)
         lastAmount = float(highestBid[0][1])
     else:
-        lastAmount = 0
+        auction = auctionItem.objects.get(id=listId)
+        lastAmount = auction.startingBid
     return lastAmount
 
 
 def getUserHighBid(listId):
     highestBid = r.zrevrange(f"auction:{listId}", 0, 0, withscores=True)
-    userHighBid = highestBid[0][0]
+    if highestBid:
+        userHighBid = highestBid[0][0]
+    else:
+        userHighBid = "Be the first bidder"
     return userHighBid
 
 
