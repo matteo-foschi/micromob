@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.decorators import login_required
+
 import hashlib
 
 from django.conf import settings
@@ -30,7 +31,7 @@ r = redis.Redis(host="127.0.0.1", port=6379, password="", db=0, decode_responses
 def homePage(request):
     auctions = auctionItem.objects.filter(active=True)
     for auction in auctions:
-        if auction.endDate >= timezone.now():
+        if auction.endDate <= timezone.now():
             auction.active = False
             auction.bidWinner = getHighBid(auction.id)
             auction.winner = getUserHighBid(auction.id)
@@ -46,9 +47,9 @@ def homePage(request):
             txId = sendTransaction(hash)
             auction.txId = txId
             auction.save()
-        return render(
-            request, "auction/homepage.html", {"list1": auctionItem.objects.all()}
-        )
+    return render(
+        request, "auction/homepage.html", {"list1": auctionItem.objects.all()}
+    )
 
 
 def logIn(request):
