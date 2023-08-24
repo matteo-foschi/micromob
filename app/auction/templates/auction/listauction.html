@@ -17,20 +17,13 @@
 
         <p class="desc">{{ list.description }}</p>
         <div class = "start_bid"><a><a class="c_price">Listed By: </a> {{ list.user }}</div>
+        <div class = "start_bid"><a><a class="c_price">Current Bid </a> {{ lastBid }}</div>
+        <div class = "start_bid"><a><a class="c_price">Current Best bidder: </a> {{ lastUserBid }}</div>
 
         <form method="get" action = "{% url 'bid' %}">
             <input name= "bidAmount" placeholder = "Bid Amount" type = "number">
             <button class="btn btn-outline-primary" type = "submit" name = "listId" value = {{ list.id }}>Bid Item</button>
         </form>
- 
-        </div>
-        </div>
-
-
-        </div>
-        </div>
-
-
     </div>
 
 {% endblock %}

@@ -1,3 +1,5 @@
 django==3.0.5 
 pillow
 redis
+django-redis
+django-redis-cache==3.0.1

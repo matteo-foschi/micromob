@@ -68,6 +68,8 @@ TEMPLATES = [
     },
 ]
 
+WSGI_APPLICATION = "app.wsgi.application"
+
 CACHES = {
     "default": {
         "BACKEND": "redis_cache.RedisCache",
@@ -75,7 +77,8 @@ CACHES = {
     }
 }
 
-WSGI_APPLICATION = "app.wsgi.application"
+# Cache time to live is 30 minutes.
+CACHE_TTL = 60 * 30
 
 
 # Database

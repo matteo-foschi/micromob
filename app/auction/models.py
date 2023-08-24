@@ -19,6 +19,7 @@ class auctionItem(models.Model):
     active = models.BooleanField(default=True)
     startDate = models.DateTimeField(default=timezone.now)
     endDate = models.DateTimeField(default=timezone.now)
+    bidWinner = models.IntegerField(default=None, null=True)
     winner = models.CharField(max_length=20, blank=True, null=True)
     txId = models.CharField(max_length=66, default=None, null=True, blank=True)
 

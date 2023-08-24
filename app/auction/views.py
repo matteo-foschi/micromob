@@ -9,7 +9,13 @@ from django.contrib import messages
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.decorators import login_required
+
+from django.conf import settings
+import json
+
 import redis
+
+r = redis.Redis(host="127.0.0.1", port=6379, password="", db=0, decode_responses=True)
 
 
 def homePage(request):
@@ -65,7 +71,7 @@ def create(request):
         if form.is_valid():
             item = form.save(commit=False)
             item.user = request.user.username
-            item.endDate = item.startDate + timedelta(days=7)
+            item.endDate = item.startDate + timedelta(minutes=30)
             item.save()
             return redirect("homePage")  # Redirect to a success page
     else:
@@ -75,16 +81,60 @@ def create(request):
 
 def listIndexAuction(request, indexId):
     indexAuction = auctionItem.objects.get(id=indexId, active=True)
-    bidsIdAuction = auctionBid.objects.filter(auction=indexId)
-
-    return render(request, "auction/listauction.html", {"list": indexAuction})
+    lastBid = getHighBid(indexId)
+    lastUserBid = getUserHighBid(indexId)
+    return render(
+        request,
+        "auction/listauction.html",
+        {"list": indexAuction, "lastBid": lastBid, "lastUserBid": lastUserBid},
+    )
 
 
 def bidList(request):
-    bidAmount = request.GET["bidAmount"]
-    listId = request.GET["listId"]
-    bidsIdAuction = auctionBid.objects.filter(auction=listId)
-    indexAuction = auctionItem.objects.get(id=listId)
+    bidAmount = float(request.GET["bidAmount"])
+    listId = str(request.GET["listId"])
+    itemAuction = auctionItem.objects.get(id=listId)
+    lastBid = getHighBid(listId)
+    lastUserBid = getUserHighBid(listId)
+    if bidAmount > lastBid and bidAmount > itemAuction.startingBid:
+        if lastUserBid == request.user.username:
+            messages.error(
+                request,
+                "Your last bid is the best. You are the best bidder in the auction.",
+            )
+            return render(request, "auction/listauction.html", {"list": listId})
+        else:
+            placeBid(listId, request.user.username, bidAmount)
+            print("Si può inserire la puntata d'asta")
+    else:
+        print("Offerta troppo bassa")
+        messages.error(
+            request,
+            "Offerta troppo bassa",
+        )
+        return render(request, "auction/listauction.html", {"list": listId})
 
-    list_id = 1
-    return render(request, list_id)
+    indexAuction = auctionItem.objects.get(id=listId, active=True)
+    return render(request, "auction/listauction.html", {"list": indexAuction})
+
+
+def placeBid(auctionId, bidder, bidAmount):
+    r.zadd(f"auction:{auctionId}", {bidder: bidAmount})
+    all_bids = r.zrange(f"auction:{auctionId}", 0, -1, withscores=True)
+    print(all_bids)
+
+
+def getHighBid(listId):
+    keyExists = r.zrange(f"auction:{listId}", 0, -1, withscores=True)
+    if len(keyExists) > 0:
+        highest_bid = r.zrevrange(f"auction:{listId}", 0, 0, withscores=True)
+        lastAmount = float(highest_bid[0][1])
+    else:
+        lastAmount = 0
+    return lastAmount
+
+
+def getUserHighBid(listId):
+    highest_bid = r.zrevrange(f"auction:{listId}", 0, 0, withscores=True)
+    userHighBid = highest_bid[0][0]
+    return userHighBid

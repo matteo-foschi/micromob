@@ -3,17 +3,21 @@
 {% block body %}
     <h2>Active Listings</h2>
     {% for list in list1 %}
-    <div class="card" style="width: 18rem;">
+    <div class="card" style="width: 25rem;">
         <img src="{{ list.image_url }}" class="card-img-top">
         <div class="card-body">
           <h5 class="card-title">{{list.title}}</h5>
           <p class="card-text">{{ list.description }}</p>
         </div>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">Starting Bid: {{ list.startingBid }} $ </li>
-          <li class="list-group-item">Last user Bid:</li>
-          <li class="list-group-item">Current Bid:</li>
-          <li class="list-group-item">Time to end:</li>
+          {% if list.active %}
+            <li class="list-group-item">Status of Auction: Active</li>
+            <li class="list-group-item">Started on: {{ list.startDate }}</li>
+            <li class="list-group-item">Will close on: {{ list.endDate }}</li>
+          {% else %}
+            <li class="list-group-item">Status of Auction: Closed</li>
+            <li class="list-group-item">Closed on: {{ list.endDate }}</li>
+          {% endif %}
         </ul>
         <div class="card-body">
           <a href="{% url 'listAuction' list.id %}" class="card-link">View Bin</a>
