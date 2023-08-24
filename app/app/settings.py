@@ -70,16 +70,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "app.wsgi.application"
 
-CACHES = {
-    "default": {
-        "BACKEND": "redis_cache.RedisCache",
-        "LOCATION": "redis://localhost:6379/0",
-    }
-}
-
-# Cache time to live is 30 minutes.
-CACHE_TTL = 60 * 30
-
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
