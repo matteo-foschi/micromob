@@ -30,6 +30,7 @@ r = redis.Redis(
     host="redis-16708.c11.us-east-1-3.ec2.cloud.redislabs.com",
     port=16708,
     password=rPassword,
+    decode_responses=True,
 )
 
 
