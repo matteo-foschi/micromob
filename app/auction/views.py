@@ -27,8 +27,8 @@ import os
 
 load_dotenv()
 
-rPassword = os.getenv("redisPassword")
-
+# rPassword = os.getenv("redisPassword") Not possibile to use .gitignore in PythonanyWhere
+rPassword = "m5hLKUYYHAYheZjoJvQ9at7tGUwFSXOo"
 
 # Setup REDIS in Clous
 r = redis.Redis(
@@ -135,7 +135,7 @@ def create(request):
         if form.is_valid():
             item = form.save(commit=False)
             item.user = request.user.username
-            item.endDate = item.startDate + timedelta(minutes=5)
+            item.endDate = item.startDate + timedelta(days=5)
             item.save()
             return redirect("homePage")  # Redirect to a success page
     else:
@@ -166,7 +166,7 @@ def bidList(request):
         if lastUserBid == request.user.username:
             messages.error(
                 request,
-                "Your last bid is the best. You are the best bidder in the auction.",
+                "Bid NOT accepted. Your last bid is the best. You are the best bidder in the auction.",
             )
             return listIndexAuction(request, listId)
         else:
@@ -178,7 +178,7 @@ def bidList(request):
     else:
         messages.error(
             request,
-            "Your bid is lower than the current bid. Please enter a higher bid than the current price.",
+            "Bid NOT accepted. Your bid is lower than the current bid. Please enter a higher bid than the current price.",
         )
         return listIndexAuction(request, listId)
 
@@ -218,7 +218,8 @@ def sendTransaction(message):
         )
     )
     address = "0x3eDb1E13ae5D632a555128E57052B7662106DEa6"
-    privateKey = os.getenv("privateKey")
+    # privateKey = os.getenv("privateKey") Not possibile to use .gitignore in PythonanyWhere
+    privateKey = "0xca4214d801b73e46f819ac5c492e813d50ab3e1b714d292878508e27c1f83b99"
     nonce = w3.eth.get_transaction_count(address, "pending")
     # w3.eth.get_transaction_count(address)
     gasPrice = w3.eth.gas_price
@@ -230,7 +231,7 @@ def sendTransaction(message):
             gas=100000,
             to="0x0000000000000000000000000000000000000000",
             value=value,
-            data=message.encode("utf-8"),
+            data=message,
         ),
         privateKey,
     )

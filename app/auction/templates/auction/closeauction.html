@@ -13,10 +13,10 @@
                   <p class="card-text">{{ list.description }}</p>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Status of Auction: Closed</li>
+                  <li class="list-group-item" style="color: #FF0000">Status of Auction: <strong>Closed</strong></li>
                     <li class="list-group-item">Closed on: {{ list.endDate }}</li>
-                    <li class="list-group-item">Winned by: {{ list.winner }}</li>
-                    <li class="list-group-item">with the best bin: {{ list.bidWinner }}</li>
+                    <li class="list-group-item">Winned by: <strong>{{ list.winner }}</strong></li>
+                    <li class="list-group-item">with the best bin: <strong>{{ list.bidWinner }}</strong> USD</li>
                     <li class="list-group-item">TxiD of blockchain of this action: {{ list.txId }}</li>
                 </ul>
             </div>

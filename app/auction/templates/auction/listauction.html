@@ -11,7 +11,7 @@
               </div>
               <ul class="list-group list-group-flush">
                 <li class="list-group-item">Listed By: {{ list.user }}</li>
-                <li class="list-group-item">Current Bid: <strong>{{ lastBid }}</strong></li>
+                <li class="list-group-item">Current Bid: <strong>{{ lastBid }} USD</strong></li>
                 <li class="list-group-item">Current Best bidder: <strong>{{ lastUserBid }}</strong></li>
                 </div>
                     <form method="get" action = "{% url 'bid' %}">    
