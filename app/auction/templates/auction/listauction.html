@@ -1,29 +1,25 @@
 {% extends "auction/base.html" %}
 
 {% block body %}
-    <a class="title">{{list.title}}</a><br>
-        {% if messages %}
-        {% for message in messages %}
-            <div class="message">{{ message }}</div>
-        {% endfor %}
-        {% endif %}
-    <div id="activelist">
-        <div id = "productinfo">
-        {% if list.image_url %}
-            <img src="{{ list.image_url }}" class="list_img">
-        {% else %}
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1024px-No_image_3x4.svg.png" alt="No image Provided" class="list_img">
-        {% endif %}
+        <div class="card" style="width: 30rem;">
+            <img src="{{ list.image_url }}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">{{list.title}}</h5>
+              <p class="card-text">{{ list.description }}</p>
+              <div class="card-header">
+                Auction information:
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">Listed By: {{ list.user }}</li>
+                <li class="list-group-item">Current Bid: <strong>{{ lastBid }}</strong></li>
+                <li class="list-group-item">Current Best bidder: <strong>{{ lastUserBid }}</strong></li>
+                </div>
+                    <form method="get" action = "{% url 'bid' %}">    
+                    <li class="list-group-item"><input name= "bidAmount" placeholder = "Bid Amount" type = "number">
+                    <button class="btn btn-primary" type = "submit" name = "listId" value = {{ list.id }}>Bid Item</button></li>
+                </form>
+                </ul>
+            </div>
 
-        <p class="desc">{{ list.description }}</p>
-        <div class = "start_bid"><a><a class="c_price">Listed By: </a> {{ list.user }}</div>
-        <div class = "start_bid"><a><a class="c_price">Current Bid </a> {{ lastBid }}</div>
-        <div class = "start_bid"><a><a class="c_price">Current Best bidder: </a> {{ lastUserBid }}</div>
-
-        <form method="get" action = "{% url 'bid' %}">
-            <input name= "bidAmount" placeholder = "Bid Amount" type = "number">
-            <button class="btn btn-outline-primary" type = "submit" name = "listId" value = {{ list.id }}>Bid Item</button>
-        </form>
-    </div>
-
+        </div>
 {% endblock %}

@@ -2,20 +2,27 @@
 
 {% block body %}
     <h2>Auctions Closed</h2>
-    {% for list in list1 %}
-    <div class="card" style="width: 22rem;">
-        <img src="{{ list.image_url }}" class="card-img-top">
-        <div class="card-body">
-          <h5 class="card-title">{{list.title}}</h5>
-          <p class="card-text">{{ list.description }}</p>
-        </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">Status of Auction: Closed</li>
-            <li class="list-group-item">Closed on: {{ list.endDate }}</li>
-            <li class="list-group-item">Winned by: {{ list.winner }}</li>
-            <li class="list-group-item">with the best bin: {{ list.bidWinner }}</li>
-            <li class="list-group-item">TxiD of blockchain of this action: {{ list.txId }}</li>
-        </ul>
+    <div class="container text-center">
+      <div class="row row-cols-2">
+        {% for list in list1 %}
+          <div class="col">
+            <div class="card" style="width: 22rem;">
+                <img src="{{ list.image_url }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">{{list.title}}</h5>
+                  <p class="card-text">{{ list.description }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Status of Auction: Closed</li>
+                    <li class="list-group-item">Closed on: {{ list.endDate }}</li>
+                    <li class="list-group-item">Winned by: {{ list.winner }}</li>
+                    <li class="list-group-item">with the best bin: {{ list.bidWinner }}</li>
+                    <li class="list-group-item">TxiD of blockchain of this action: {{ list.txId }}</li>
+                </ul>
+            </div>
+          </div>
+          <br>
+          {% endfor %}
       </div>
-    {% endfor %}
+    </div>
 {% endblock %}

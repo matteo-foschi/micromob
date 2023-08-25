@@ -38,17 +38,17 @@
                     <a class="nav-link active" aria-current="page" href="{% url 'myProfile' %}">My Profile</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logOut' %}">Log Out</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'logOut' %}">Log Out</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'create' %}">Create New Auction</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'create' %}">Create New Auction</a>
                   </li>
                   {% else %}
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logIn' %}">Log In</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'logIn' %}">Log In</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'register' %}">Register</a>
                   </li>
                   {% endif %}
                 </ul>
@@ -57,16 +57,21 @@
         </nav>
 
 
-        <div>
-            {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
-            {% else %}
-                User not signed in. Plese log-in to partecipate at the auction.
-            {% endif %}
-        </div>
-
+          {% if user.is_authenticated %}
+              Signed in as <strong>{{ user.username }}</strong>.
+          {% else %}
+              User not signed in. Plese log-in to partecipate at the auction.
+          {% endif %}
+          {% if messages %}
+          {% for message in messages %}
+              <div class="message">{{ message }}</div>
+          {% endfor %}
+          {% endif %}
+      </br>
+      <div class="container mx-3">
         {% block body %}
         {% endblock %}
+      </div>
 
     </body>
 </html>
