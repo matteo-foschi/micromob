@@ -7,27 +7,27 @@
         {% for list in list1 %}
         <div class="col">
           <div class="card" style="width: 22rem;">
-              <img src="{{ list.image_url }}" class="card-img-top" alt="...">
+              <img src="{{ list.image_url }}"  width="350"  class="card-img-top" alt="...">
               <div class="card-body">
                 <h5 class="card-title">{{list.title}}</h5>
                 <p class="card-text">{{ list.description }}</p>
               </div>
               <ul class="list-group list-group-flush">
                 {% if list.active %}
-                  <li class="list-group-item">Status of Auction: Active</li>
+                  <li class="list-group-item" style="color: #006400">Status of Auction: <strong>Active</strong></li>
                   <li class="list-group-item">Started on: {{ list.startDate }}</li>
-                  <li class="list-group-item">Will close on: {{ list.endDate }}</li>
+                  <li class="list-group-item"><strong>Will close on: {{ list.endDate }}</strong></li>
                   {% if user.is_authenticated %}
                     <div class="card-body">
                       <a href="{% url 'listAuction' list.id %}" class="card-link">View Bin</a>
                     </div>
                   {% else %}
                     <div class="card-body">
-                      <a class="nav-link" href="{% url 'logIn' %}">To bid this auction Log In</a>
+                      <a class="nav-link" href="{% url 'logIn' %}"><strong>To bid this auction Log In</strong></a>
                     </div>
                   {% endif %}
                 {% else %}
-                  <li class="list-group-item">Status of Auction: Closed</li>
+                  <li class="list-group-item" style="color: #FF0000">Status of Auction: <strong>Closed</strong></li>
                   <li class="list-group-item">Closed on: {{ list.endDate }}</li>
                   <li class="list-group-item">Winned by: {{ list.winner }}</li>
                   <li class="list-group-item">with the best bin: {{ list.bidWinner }}</li>

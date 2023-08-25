@@ -14,7 +14,7 @@
         <nav class="navbar bg-body-tertiary" data-bs-theme="dark">
             <div class="container-fluid">
               <a class="navbar-brand" href="#">
-                <img src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                <img src="static/images/logo.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
                 MicroMob - the new micromobility
               </a>
             </div>
@@ -35,7 +35,7 @@
                   </li>
                   {% if user.is_authenticated %}
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'myProfile' %}">My Profile</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'myProfile' %}">Win Auctions</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'logOut' %}">Log Out</a>
@@ -56,18 +56,24 @@
             </div>
         </nav>
 
-
+      </br>
+      <div class="container mx-1">
           {% if user.is_authenticated %}
               Signed in as <strong>{{ user.username }}</strong>.
           {% else %}
               User not signed in. Plese log-in to partecipate at the auction.
           {% endif %}
-          {% if messages %}
-          {% for message in messages %}
-              <div class="message">{{ message }}</div>
-          {% endfor %}
-          {% endif %}
+          <br>
+          <div class="container mx-2" style="background-color: #D8E9A8;">
+            {% if messages %}
+            {% for message in messages %}
+                <div class="message"><strong>{{ message }}</strong></div>
+            {% endfor %}
+            {% endif %}
+          </div>
       </br>
+    </div>
+    </br>
       <div class="container mx-3">
         {% block body %}
         {% endblock %}

@@ -20,12 +20,17 @@ import redis
 from web3 import Web3
 
 from dotenv import load_dotenv
+
+from django.http import HttpResponse, HttpResponseBadRequest
+
 import os
 
 load_dotenv()
 
 rPassword = os.getenv("redisPassword")
 
+
+# Setup REDIS in Clous
 r = redis.Redis(
     host="redis-16708.c11.us-east-1-3.ec2.cloud.redislabs.com",
     port=16708,
@@ -34,25 +39,31 @@ r = redis.Redis(
 )
 
 
+# Home Page - List of all the auction available and that are not conluded
 def homePage(request):
-    auctions = auctionItem.objects.filter(active=True)
-    for auction in auctions:
-        if auction.endDate <= timezone.now():
-            auction.active = False
-            auction.bidWinner = getHighBid(auction.id)
-            auction.winner = getUserHighBid(auction.id)
-            data = {
-                "ID": auction.id,
-                "Auction tile": auction.title,
-                "Start Auction price": auction.startingBid,
-                "End Auction price": auction.bidWinner,
-                "Winner user": auction.winner,
-            }
-            jsonString = json.dumps(data)
-            hash = hashlib.sha256(jsonString.encode("utf-8")).hexdigest()
-            txId = sendTransaction(hash)
-            auction.txId = txId
-            auction.save()
+    if auctionItem.objects.filter(active=True).exists():
+        auctions = auctionItem.objects.filter(active=True)
+        for auction in auctions:
+            if auction.endDate <= timezone.now():
+                auction.active = False
+                auction.bidWinner = getHighBid(auction.id)
+                auction.winner = getUserHighBid(auction.id)
+                data = {
+                    "ID": auction.id,
+                    "Auction tile": auction.title,
+                    "Start Auction price": auction.startingBid,
+                    "End Auction price": auction.bidWinner,
+                    "Winner user": auction.winner,
+                }
+                jsonString = json.dumps(data)
+                hash = hashlib.sha256(jsonString.encode("utf-8")).hexdigest()
+                txId = sendTransaction(hash)
+                auction.txId = txId
+                auction.save()
+    else:
+        messages.error(request,
+            "We are so sorry but there aren't auctions Active now.",
+        )
     return render(
         request,
         "auction/homepage.html",
@@ -60,6 +71,7 @@ def homePage(request):
     )
 
 
+# Auction Closed - List of all the auction that are conluded
 def auctionClosed(request):
     return render(
         request,
@@ -68,6 +80,7 @@ def auctionClosed(request):
     )
 
 
+# Log in procedure
 def logIn(request):
     if request.method == "POST":
         # Attempt to sign user in
@@ -89,6 +102,7 @@ def logIn(request):
         return render(request, "auction/login.html")
 
 
+# Register procedure
 def register(request):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
@@ -102,11 +116,13 @@ def register(request):
     return render(request, "auction/register.html", {"form": form})
 
 
+# Log out procedure
 def logOut(request):
     logout(request)
     return redirect("homePage")
 
 
+# Create procedure limited to admin
 def create(request):
     if request.method == "POST":
         form = auctionItemForm(request.POST, request.FILES)
@@ -121,6 +137,7 @@ def create(request):
     return render(request, "auction/create.html", {"form": form})
 
 
+# View in detail of one auction and possibility to bid the auction
 def listIndexAuction(request, indexId):
     indexAuction = auctionItem.objects.get(id=indexId, active=True)
     lastBid = getHighBid(indexId)
@@ -132,6 +149,7 @@ def listIndexAuction(request, indexId):
     )
 
 
+# Procedure to BID the autction - All the data store in REDIS
 def bidList(request):
     bidAmount = float(request.GET["bidAmount"])
     listId = str(request.GET["listId"])
@@ -159,10 +177,12 @@ def bidList(request):
         return listIndexAuction(request, listId)
 
 
+# Procedure to place the bid in REDIS
 def placeBid(auctionId, bidder, bidAmount):
     r.zadd(f"auction:{auctionId}", {bidder: bidAmount})
 
 
+# Procedure to get the best bid for "listId" auction
 def getHighBid(listId):
     keyExists = r.zrange(f"auction:{listId}", 0, -1, withscores=True)
     if len(keyExists) > 0:
@@ -174,6 +194,7 @@ def getHighBid(listId):
     return lastAmount
 
 
+# Procedure to get the best bidder for "listId" auction
 def getUserHighBid(listId):
     highestBid = r.zrevrange(f"auction:{listId}", 0, 0, withscores=True)
     if highestBid:
@@ -183,6 +204,7 @@ def getUserHighBid(listId):
     return userHighBid
 
 
+# Procedure to send the transaction on GOERLI TEST NET
 def sendTransaction(message):
     w3 = Web3(
         Web3.HTTPProvider(
@@ -212,13 +234,21 @@ def sendTransaction(message):
     return txId
 
 
+# List of all the bid closed and filtered for username
 def auctionWin(request):
-    return render(
-        request,
-        "auction/myprofile.html",
-        {
-            "list1": auctionItem.objects.filter(
-                active=False, winner=request.user.username
-            )
-        },
-    )
+    if auctionItem.objects.filter(active=False, winner=request.user.username).exists():
+        return render(
+            request,
+            "auction/myprofile.html",
+            {
+                "list1": auctionItem.objects.filter(
+                    active=False, winner=request.user.username
+                )
+            },
+        )
+    else:
+        messages.error(
+            request,
+            "We are so sorry but there aren't auctions closed that you won.",
+        )
+        return redirect("homePage")
