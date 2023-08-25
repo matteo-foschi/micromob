@@ -3,8 +3,17 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MicroMob Auction</title>
+    <title>MicroMob Auctions</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito&display=swap">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+        }
+    </style>
+
+
   </head>
     <body>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
@@ -28,20 +37,20 @@
               <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'homePage' %}">Home Page</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'homePage' %}">Active Auction</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'auctionClosed' %}">Closed Auction</a>
                   </li>
                   {% if user.is_authenticated %}
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'myProfile' %}">Win Auctions</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'logOut' %}">Log Out</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'myProfile' %}">Auctions Winned</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'create' %}">Create New Auction</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'logOut' %}">Log Out</a>
                   </li>
                   {% else %}
                   <li class="nav-item">

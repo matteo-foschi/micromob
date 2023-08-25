@@ -61,7 +61,8 @@ def homePage(request):
                 auction.txId = txId
                 auction.save()
     else:
-        messages.error(request,
+        messages.error(
+            request,
             "We are so sorry but there aren't auctions Active now.",
         )
     return render(
@@ -73,6 +74,11 @@ def homePage(request):
 
 # Auction Closed - List of all the auction that are conluded
 def auctionClosed(request):
+    if not auctionItem.objects.filter(active=False).exists():
+        messages.error(
+            request,
+            "There aren't auctions closed yet.",
+        )
     return render(
         request,
         "auction/closeauction.html",
@@ -165,14 +171,14 @@ def bidList(request):
             return listIndexAuction(request, listId)
         else:
             placeBid(listId, request.user.username, bidAmount)
-            print("Si può inserire la puntata d'asta")
-            messages.success(request, "Offerta correttamente inserita")
+            messages.success(
+                request, "Auction bid successfully entered. You are the highest bidder."
+            )
             return listIndexAuction(request, listId)
     else:
-        print("Offerta troppo bassa")
         messages.error(
             request,
-            "Offerta troppo bassa",
+            "Your bid is lower than the current bid. Please enter a higher bid than the current price.",
         )
         return listIndexAuction(request, listId)
 

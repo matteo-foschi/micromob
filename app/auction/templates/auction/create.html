@@ -1,12 +1,16 @@
 {% extends "auction/base.html" %}
 
 {% block body %}
-    <h2 style = "font-weight: bold;text-align: center; font-family: Nunito;">Create Listing</h2>
+{% if user.is_staff %}
+    <h2>Create new Auction:</h2>
     <div id="activelist">
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn btn-outline-primary" type="submit">Submit</button>
-    </form>    
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-outline-primary" type="submit">Submit</button>
+        </form>    
     </div>
+{% else %}
+    <h5>Creaton of new actions are permitted only to admin. If you are an admin, please, login with ID ad admin password.</h5>
+{% endif %}
 {% endblock %}
