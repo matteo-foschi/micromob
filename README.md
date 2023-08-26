@@ -7,20 +7,20 @@ The technology stack involves the utilization of Django and DB Sql for the aucti
 
 🔹 Key Requirements:
 
-• Development of an auction posting and creation interface accessible only for the Admin user;
-• Creation of a centralized page for all ongoing active auctions;
-• Design a user-friendly bidding mechanism, enabling participants to bid on any auction active;
-• Implementation of write on blockchain procedure in order to archive information for concluded auctions with all the relative informations.
+- Development of an auction posting and creation interface accessible only for the Admin user;
+- Creation of a centralized page for all ongoing active auctions;
+- Design a user-friendly bidding mechanism, enabling participants to bid on any auction active;
+- Implementation of write on blockchain procedure in order to archive information for concluded auctions with all the relative informations.
 
 💻 Implemented Features:
 
 The project incorporates an array of functionalities designed to enhance user experience:
 
-• Formulated registration and login forms for user;
-• Dedicated page, restricted to the Admin, for creation and posting new auction;
-• Crafting a publicly accessible page showcasing currently active auctions and already closed auction;
-• Design a dedicate page to allows users to participate and bidding for the ongoing auctions;
-• Dedicate page, restricted to user logged, where find the auction won;
+- Formulated registration and login forms for user;
+- Dedicated page, restricted to the Admin, for creation and posting new auction;
+- Crafting a publicly accessible page showcasing currently active auctions and already closed auction;
+- Design a dedicate page to allows users to participate and bidding for the ongoing auctions;
+- Dedicate page, restricted to user logged, where find the auction won;
 
 💻 Deployment:
 
