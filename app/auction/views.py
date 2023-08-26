@@ -231,7 +231,7 @@ def sendTransaction(message):
             gas=100000,
             to="0x0000000000000000000000000000000000000000",
             value=value,
-            data=message,
+            data=message.encode("utf-8"),
         ),
         privateKey,
     )
