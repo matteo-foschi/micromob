@@ -228,4 +228,12 @@ def auctionWin(request):
             request,
             "We are so sorry but there aren't auctions closed that you won.",
         )
-        return redirect("homePage")
+        return render(
+            request,
+            "auction/myprofile.html",
+            {
+                "list1": auctionItem.objects.filter(
+                    active=False, winner=request.user.username
+                )
+            },
+        )
