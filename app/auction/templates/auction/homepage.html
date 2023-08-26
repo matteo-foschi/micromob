@@ -1,14 +1,15 @@
 {% extends "auction/base.html" %}
 
 {% block body %}
-    <h2>Active Auction:</h2>
+    <h2>Active Auctions:</h2>
     <h5>"Join us for a greener future! Bid on electric vehicles in our time-limited charity auctions and support worthy causes while driving innovation. Your bids drive change!"</h5>
     <br>
-    <div class="container text-center">
-      <div class="row row-cols-2">
+    <div class="container">
+      <div class="row row-cols-3">
         {% for list in list1 %}
+        <br>
         <div class="col">
-          <div class="card" style="width: 22rem;">
+          <div class="card" style="width: 20rem;">
               <img src="{{ list.image_url }}"  width="350"  class="card-img-top" alt="...">
               <div class="card-body">
                 <h5 class="card-title">{{list.title}}</h5>
@@ -36,7 +37,6 @@
                   <li class="list-group-item">TxiD of blockchain of this action: {{ list.txId }}</li>
                 {% endif %}
               </ul>
-            </div>
           </div>
         </div>
         {% endfor %}
