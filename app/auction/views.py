@@ -28,8 +28,7 @@ import os
 
 load_dotenv()
 
-# rPassword = os.getenv("redisPassword") Not possibile to use .gitignore in PythonanyWhere
-rPassword = "m5hLKUYYHAYheZjoJvQ9at7tGUwFSXOo"
+rPassword = os.getenv("redisPassword")
 
 # Setup REDIS in Clous
 r = redis.Redis(

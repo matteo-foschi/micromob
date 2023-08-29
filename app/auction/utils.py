@@ -9,8 +9,7 @@ def sendTransaction(message):
         )
     )
     address = "0x3eDb1E13ae5D632a555128E57052B7662106DEa6"
-    # privateKey = os.getenv("privateKey") Not possibile to use .gitignore in PythonanyWhere
-    privateKey = "0xca4214d801b73e46f819ac5c492e813d50ab3e1b714d292878508e27c1f83b99"
+    privateKey = os.getenv("privateKey")
     nonce = w3.eth.get_transaction_count(address, "pending")
     # w3.eth.get_transaction_count(address)
     gasPrice = w3.eth.gas_price
