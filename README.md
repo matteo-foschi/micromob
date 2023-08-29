@@ -7,9 +7,9 @@ The technology stack involves the utilization of Django and DB Sql for the aucti
 
 🔹 Key Requirements:
 
-- Development of an auction posting and creation interface accessible only for the Admin user;
-- Creation of a centralized page for all ongoing active auctions;
 - Design a user-friendly bidding mechanism, enabling participants to bid on any auction active;
+- Implement a very fast database to manage the various bids, such as Redis, and then store the outcome of the auction, like all other user data, in a relational database;
+- Development of an auction posting and creation interface accessible only for the Admin user;
 - Implementation of write on blockchain procedure in order to archive information for concluded auctions with all the relative informations.
 
 💻 Implemented Features:
